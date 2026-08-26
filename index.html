@@ -994,14 +994,14 @@
     </div>
     <div class="reveal gp">
       <div class="gp-tabs">
-        <button class="gp-btn active" data-g="1">🚀 星际战机 · 飞机大战</button>
-        <button class="gp-btn" data-g="2">🐲 守护奶龙</button>
+        <button class="gp-btn active" data-g="1">🚀 星际战机</button>
+        <button class="gp-btn" data-g="2">🐲 奶龙大作战</button>
       </div>
       <div class="gp-frame">
         <!-- 覆盖层放 iframe 之前 + z-index 高 + 边框显眼，绕过 Chrome iframe native widget 问题 -->
         <div class="gp-cover" id="gpCover" style="z-index:99999"><div class="ico">▶</div><div class="title">点击进入游戏</div><div class="tip">游戏已加载 · 第一次需要点一下激活音频 / 开始</div><div class="meta">提示：玩完后可滚动页面继续浏览简历</div></div>
-        <iframe id="g1" data-src="./星际战机/index.html" title="星际战机 · 飞机大战" allowfullscreen loading="eager"></iframe>
-        <iframe id="g2" data-src="./坦克大战/index.html" title="守护奶龙" allowfullscreen loading="eager" class="hide"></iframe>
+        <iframe id="g1" data-src="./星际战机/index.html" title="星际战机" allowfullscreen loading="eager"></iframe>
+        <iframe id="g2" data-src="./坦克大战/index.html" title="奶龙大作战" allowfullscreen loading="eager" class="hide"></iframe>
         <div class="gp-err" id="gpErr" style="display:none"><div class="ico">⚠</div><div>游戏加载失败</div><div class="meta">可能被网络阻拦，请直接打开下方链接</div><a href="./星际战机/index.html" target="_blank" rel="noopener">🚀 在新窗口打开星际战机</a></div>
       </div>
       <div class="gp-hint">↑ 点按钮切换游戏 · 进游戏后点画布激活 · 玩完按 ← → 或回到页面继续浏览</div>
@@ -1069,14 +1069,6 @@
       <div class="skill"><div class="row"><span>AI 辅助编码</span><span class="lv">8 / 10</span></div><div class="bar"><i data-w="80%"></i></div></div>
       <div class="skill"><div class="row"><span>云计算基础（阿里云）</span><span class="lv">7 / 10</span></div><div class="bar"><i data-w="70%"></i></div></div>
       <div class="skill"><div class="row"><span>数据分析与可视化</span><span class="lv">6 / 10</span></div><div class="bar"><i data-w="60%"></i></div></div>
-    </div>
-    <div class="skill-group reveal">
-      <h3>行业认证（16 项）</h3>
-      <div class="skill"><div class="row"><span>阿里云 大模型 Clouder 系列（10 项）</span><span class="lv">已获</span></div><div class="bar"><i data-w="100%"></i></div></div>
-      <div class="skill"><div class="row"><span>科大讯飞 AI 能力认证（4 项）</span><span class="lv">已获</span></div><div class="bar"><i data-w="100%"></i></div></div>
-      <div class="skill"><div class="row"><span>华为 HCIA 系列（2 项）</span><span class="lv">已获</span></div><div class="bar"><i data-w="100%"></i></div></div>
-      <div class="skill"><div class="row"><span>Datawhale 开源学习认证（1 项）</span><span class="lv">已获</span></div><div class="bar"><i data-w="100%"></i></div></div>
-      <p style="color:var(--muted);font-size:13px;margin-top:14px">覆盖方向：RAG 系统 · Prompt 工程 · 模型微调 · 智能体开发 · AIGC 设计 · AI 辅助编码 · 人工智能训练师（初 / 高级）。</p>
     </div>
     <div class="reveal skill-radar">
       <h3 style="text-align:center;margin:0 0 2px">能力雷达 · 六维自评</h3>
@@ -1319,11 +1311,11 @@
             '根据实际需求（学习 / 游戏 / 性价比）匹配机型与配置',
             '独立走完「需求沟通 → 报价 → 交付 → 售后」真实销售全流程，积累一线成交经验']}],
         projects:[
-          {date:'2026',title:'守护奶龙 · 坦克大战（AI 辅助开发）',desc:'从 0 到 1 的网页小游戏作品',points:[
+          {date:'2026',title:'奶龙大作战 · 坦克小游戏（AI 辅助开发）',desc:'以网络人气IP「奶龙」为原型的网页坦克游戏',points:[
             '利用 AI 完成小游戏制作：从需求拆解到代码落地全程由 AI 辅助实现',
-            '单文件 HTML5 + Canvas，含多关卡、敌人 AI、道具系统与海量霓虹特效',
+            '单文件 HTML5 + Canvas，含多关卡、敌人 AI、道具系统与霓虹特效',
             '体现用 AI 工具把想法快速变成可玩作品的能力'],link:'./坦克大战/index.html',linkText:'🔗 在线试玩 / 查看'},
-          {date:'2026',title:'星际战机 · 飞机大战（Canvas 射击游戏）',desc:'完整的飞机大战射击类网页游戏',points:[
+          {date:'2026',title:'星际战机（Canvas 射击游戏）',desc:'完整的飞机射击类网页游戏',points:[
             '单文件 HTML5 Canvas，含 Boss 战、连击系统、多种武器与道具升级',
             '适配手机触屏与电脑双端操控',
             '微信内置浏览器可直接打开游玩'],link:'./星际战机/index.html',linkText:'🚀 在线试玩 / 查看'}]
@@ -1334,7 +1326,7 @@
         {id:'aliyun',label:'阿里云 · 10 项',short:'阿里云'},
         {id:'iflytek',label:'科大讯飞 · 4 项',short:'讯飞'},
         {id:'huawei',label:'华为 · 2 项',short:'华为'},
-        {id:'datawhale',label:'Datawhale · 1 项',short:'DW'}
+        {id:'datawhale',label:'Datawhale · 3 项',short:'DW'}
       ],
       panels:{
         aliyun:[
@@ -1892,8 +1884,8 @@
       /* build command items */
       var cmdItems=[];
       sections.forEach(function(id){var el=document.getElementById(id);if(!el)return;cmdItems.push({label:id,sub:id,group:'板块',action:function(){location.hash='#'+id;}});});
-      cmdItems.push({label:'游戏试玩 · 星际战机',sub:'飞机大战',group:'游戏',action:function(){location.hash='#games';}});
-      cmdItems.push({label:'游戏试玩 · 守护奶龙',sub:'守护奶龙坦克大战',group:'游戏',action:function(){location.hash='#games';}});
+      cmdItems.push({label:'游戏试玩 · 星际战机',sub:'射击游戏',group:'游戏',action:function(){location.hash='#games';}});
+      cmdItems.push({label:'游戏试玩 · 奶龙大作战',sub:'坦克小游戏',group:'游戏',action:function(){location.hash='#games';}});
       cmdItems.push({label:'联系 · 邮箱',sub:'257172676@qq.com',group:'联系',action:function(){location.hash='#contact';}});
       try{CERT.tabs.forEach(function(t,ti){CERT.panels[t.id].forEach(function(c,ci){cmdItems.push({label:t.short+' · '+c.n,sub:c.t||'认证',group:'证书',action:function(){openLb(CERT.tabs[ti],ci);}});});});}catch(e){}
 
