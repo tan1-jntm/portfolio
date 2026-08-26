@@ -577,7 +577,8 @@
     box-shadow:0 24px 70px rgba(0,0,0,.35)}
   .gp-tabs{display:flex;gap:8px;padding:14px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap}
   .gp-btn{padding:9px 18px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);
-    color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;transition:.2s;font-family:inherit}
+    color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:7px}
+  .gp-btn img{width:22px;height:22px;border-radius:50%;object-fit:cover;display:block}
   .gp-btn:hover{color:var(--text);border-color:var(--border2)}
   .gp-btn.active{background:var(--grad);color:#06121a;border-color:transparent}
   .gp-frame{position:relative;width:100%;height:min(58vh,500px);min-height:300px;background:#000}
@@ -995,7 +996,7 @@
     <div class="reveal gp">
       <div class="gp-tabs">
         <button class="gp-btn active" data-g="1">🚀 星际战机</button>
-        <button class="gp-btn" data-g="2">🟡 奶龙大作战</button>
+        <button class="gp-btn" data-g="2"><img src="certs/nailong_mascot.jpg" alt="奶龙">奶龙大作战</button>
       </div>
       <div class="gp-frame">
         <!-- 覆盖层放 iframe 之前 + z-index 高 + 边框显眼，绕过 Chrome iframe native widget 问题 -->
