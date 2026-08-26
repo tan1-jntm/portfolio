@@ -433,6 +433,62 @@
   /* 菜单粒子连线网络（particles.js 招牌效果） */
   #bgFX { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
 
+  /* ===== 主菜单背景装饰（填充四周空旷区域） ===== */
+  .menu-deco { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+  /* 大字水印 */
+  .deco-word { position:absolute; font-size:clamp(60px,12vw,140px); font-weight:900;
+    color:rgba(43,214,255,.04); letter-spacing:8px; white-space:nowrap;
+    text-transform:uppercase; pointer-events:none; user-select:none;
+    animation:decoWordFloat 7s ease-in-out infinite alternate; }
+  .dw1 { top:6%; left:-4%; transform:rotate(-8deg); animation-delay:0s; color:rgba(43,214,255,.035); }
+  .dw2 { bottom:8%; right:-6%; transform:rotate(6deg); animation-delay:-2.3s; color:rgba(255,54,200,.03); }
+  .dw3 { top:52%; left:-8%; transform:rotate(-3deg); animation-delay:-4.6s; color:rgba(123,255,176,.03); font-size:clamp(50px,10vw,110px); }
+  @keyframes decoWordFloat {
+    0% { opacity:.5; transform:translateY(0) rotate(var(--r,0deg)); }
+    100% { opacity:.9; transform:translateY(-12px) rotate(calc(var(--r,0deg) + 1deg)); }
+  }
+  /* 几何形状（六边形/圆环/三角） */
+  .deco-shape { position:absolute; border:1.5px solid; opacity:.12; pointer-events:none;
+    animation:decoShapeDrift 5.5s ease-in-out infinite alternate; }
+  .ds1 { width:80px;height:80px;border-radius:50%;border-color:#2bd6ff;
+    top:10%;right:8%;animation:decoSpin 14s linear infinite;opacity:.1; }
+  .ds2 { width:60px;height:60px;border-color:#ff36c8;
+    bottom:15%;left:6%;clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);
+    animation:decoShapeDrift 6s ease-in-out infinite alternate reverse;opacity:.1; }
+  .ds3 { width:100px;height:40px;border-color:#7df0ff;border-radius:20px;
+    top:68%;right:4%;transform:rotate(-15deg);animation:decoShapeDrift 7s ease-in-out infinite alternate;opacity:.08; }
+  .ds4 { width:50px;height:50px;border-color:#ffd34d;
+    top:18%;left:10%;clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+    animation:decoSpin 18s linear infinite reverse;opacity:.09; }
+  @keyframes decoSpin { to { transform:rotate(360deg); } }
+  @keyframes decoShapeDrift {
+    0% { transform:translate(0,0) scale(1) rotate(var(--sr,0deg)); opacity:.08; }
+    100% { transform:translate(8px,-10px) scale(1.08) rotate(calc(var(--sr,0deg) + 8deg)); opacity:.16; }
+  }
+  /* 浮动图标 */
+  .deco-icon { position:absolute;font-size:22px;opacity:.12;pointer-events:none;
+    animation:decoIconFloat 4.5s ease-in-out infinite alternate; filter:blur(.3px); }
+  .di1 { top:14%;left:16%;animation-delay:0s; }
+  .di2 { top:22%;right:14%;animation-delay:-1.2s;font-size:18px; }
+  .di3 { bottom:20%;right:18%;animation-delay:-2.4s;font-size:20px; }
+  .di4 { bottom:12%;left:20%;animation-delay:-3.6s;font-size:16px; }
+  @keyframes decoIconFloat {
+    0% { opacity:.08; transform:translate(0,0) scale(1) rotate(-6deg); }
+    100% { opacity:.2; transform:translate(0,-16px) scale(1.15) rotate(6deg); }
+  }
+  /* 连线装饰 */
+  .deco-line { position:absolute;background:linear-gradient(90deg,transparent,var(--lc),transparent);
+    height:1px;opacity:.1;pointer-events:none;animation:decoLinePulse 3s ease-in-out infinite alternate; }
+  .dl1 { top:28%;left:2%;width:120px;--lc:#2bd6ff;transform:rotate(-18deg); }
+  .dl2 { bottom:30%;right:2%;width:100px;--lc:#ff36c8;transform:rotate(12deg);animation-delay:-1s; }
+  .dl3 { top:55%;left:0;width:80px;--lc:#7df0ff;transform:rotate(-8deg);animation-delay:-2s; }
+  .dl4 { bottom:45%;right:0;width:90px;--lc:#ffd34d;transform:rotate(6deg);animation-delay:-1.5s; }
+  @keyframes decoLinePulse {
+    0% { opacity:.05; width:var(--w,80px); }
+    100% { opacity:.16; width:calc(var(--w,80px) * 1.4); }
+  }
+  .dl1{--w:120px}.dl2{--w:100px}.dl3{--w:80px}.dl4{--w:90px}
+
   .hide { display:none !important; }
   #tip { position:absolute; bottom:176px; left:0; right:0; text-align:center; color:#fff9;
     font-size:12px; z-index:4; text-shadow:0 0 8px #2bd6ff; }
@@ -485,6 +541,24 @@
 
     <!-- 主菜单 -->
     <section class="screen" data-screen="menu">
+      <!-- 背景装饰：填充四周空旷区域 -->
+      <div class="menu-deco">
+        <span class="deco-word dw1">TANK</span>
+        <span class="deco-word dw2">NEON</span>
+        <span class="deco-word dw3">WAR</span>
+        <span class="deco-shape ds1"></span>
+        <span class="deco-shape ds2"></span>
+        <span class="deco-shape ds3"></span>
+        <span class="deco-shape ds4"></span>
+        <span class="deco-icon di1">🛡️</span>
+        <span class="deco-icon di2">🔥</span>
+        <span class="deco-icon di3">⚡</span>
+        <span class="deco-icon di4">💥</span>
+        <span class="deco-line dl1"></span>
+        <span class="deco-line dl2"></span>
+        <span class="deco-line dl3"></span>
+        <span class="deco-line dl4"></span>
+      </div>
       <div class="game-logo"><img src="../certs/nailong_mascot.jpg" alt="奶龙" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block"></div>
       <h1 class="game-title">奶龙大作战</h1>
       <div class="game-sub">N E O N · T A N K · W A R</div>
