@@ -1,0 +1,7 @@
+证书图片放置说明
+将证书截图放入本文件夹（resume-site/certs/），文件名与下方一致，点“查看”即显示真图：
+阿里云(10)：aliyun_rag_optimize.webp, 10_spring_ai.webp, aliyun_agent_bailian.webp, 11_tongyi_lingma.webp, aliyun_content_production.webp, aliyun_vision_basic.webp, aliyun_vision_advanced.webp, aliyun_aigc_artlab.webp, damo_trainer_junior.webp, damo_trainer_senior.webp
+科大讯飞(4)：iflytek_rag.webp, iflytek_finetune.webp, iflytek_agent.webp, iflytek_prompt.webp
+华为(2)：huawei_ai_intro.webp, huawei_ai_voice.webp
+Datawhale(1)：datawhale_ai_coding.webp
+支持 .webp / .jpg / .png。未放入时弹窗自动显示证书样式卡。
