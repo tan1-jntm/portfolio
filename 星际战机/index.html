@@ -1649,7 +1649,7 @@ function drawEnemy(e) {
   }
 
   ctx.shadowColor = e.color;
-  ctx.shadowBlur = 8;
+  ctx.shadowBlur = 5;
 
   switch (e.type) {
     case 'drone':
@@ -1824,16 +1824,14 @@ function drawBullet(b) {
     ctx.strokeStyle = b.color;
     ctx.lineWidth = b.laserWidth;
     ctx.shadowColor = b.color;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 8;
     ctx.beginPath();
     ctx.moveTo(b.x - Math.cos(b.angle) * 200, b.y - Math.sin(b.angle) * 200);
     ctx.lineTo(b.x + Math.cos(b.angle) * 200, b.y + Math.sin(b.angle) * 200);
     ctx.stroke();
   } else {
-    ctx.fillStyle = b.color;
-    ctx.shadowColor = b.color;
-    ctx.shadowBlur = 6;
-    ctx.fillRect(b.x - b.width / 2, b.y - b.height / 2, b.width, b.height);
+    // 用缓存离屏光点替代 shadowBlur（提帧率）
+    drawGlow(ctx, b.x, b.y, Math.max(b.width, b.height), b.color, 0.95);
     // 子弹白色核心（高能感）
     if (!b.isEnemy) {
       ctx.fillStyle = '#ffffff';
