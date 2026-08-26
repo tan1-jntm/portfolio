@@ -559,12 +559,12 @@ var T_EMPTY=0, T_BRICK=1, T_STEEL=2, T_WATER=3, T_GRASS=4, T_ICE=5, T_BASE=6;
 var DX=[0,0,-1,1], DY=[-1,1,0,0];
 
 var ENEMY_TYPES = {
-  NORMAL: { name:'普通', speed:1.25, hp:1, fireEvery:130, color:'#37e0ff', score:100 },
-  FAST:   { name:'快速', speed:2.1,  hp:1, fireEvery:150, color:'#ffe14d', score:200 },
-  HEAVY:  { name:'重型', speed:0.8,  hp:2, fireEvery:150, color:'#b06bff', score:300 },
-  SMART:  { name:'智能', speed:1.45, hp:1, fireEvery:120, color:'#ff5d7a', score:250 }
+  NORMAL: { name:'普通', speed:1.45, hp:1, fireEvery:110, color:'#37e0ff', score:100 },
+  FAST:   { name:'快速', speed:2.4,  hp:1, fireEvery:125, color:'#ffe14d', score:200 },
+  HEAVY:  { name:'重型', speed:1.0,  hp:2, fireEvery:125, color:'#b06bff', score:300 },
+  SMART:  { name:'智能', speed:1.7, hp:1, fireEvery:100, color:'#ff5d7a', score:250 }
 };
-var BOSS = { name:'BOSS', speed:0.6, hp:14, fireEvery:75, color:'#ff2e6e', score:2500 };
+var BOSS = { name:'BOSS', speed:0.8, hp:14, fireEvery:60, color:'#ff2e6e', score:2500 };
 
 /* ===================== 2. 工具函数 ===================== */
 function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
@@ -868,7 +868,7 @@ function makeTank(c, r, dir, isPlayer, typeKey, isBoss){
     isPlayer: !!isPlayer,
     isBoss: !!isBoss,
     typeKey: typeKey || 'NORMAL',
-    speed: isPlayer ? 1.9 : t.speed,   // 玩家速度 1.9（还不够快？再飙一档！）
+    speed: isPlayer ? 2.5 : t.speed,   // 玩家速度 2.5（爽感）
     hp: t.hp, maxhp: t.hp,
     fireCd: 0,
     fireEvery: t.fireEvery,
@@ -897,13 +897,13 @@ function spawnBullet(owner, tank, dir, spreadColor){
   var bx = cx + DX[d]*(tank.size/2) - BULLET/2;
   var by = cy + DY[d]*(tank.size/2) - BULLET/2;
   var pierce = (owner==='player' && tank.weapon>=3) ? 2 : 0;
-  var spd = (owner==='player') ? 7.0 : (tank.isBoss ? 5.0 : 4.5);
+  var spd = (owner==='player') ? 9.5 : (tank.isBoss ? 6.5 : 5.5);
   var maxWep = (owner==='player' && tank.weapon>=3);
   var sz = tank.isBoss ? 9 : (maxWep ? BULLET+3 : BULLET);
   bullets.push({ x:bx, y:by, dir:d, owner:owner, speed:spd, pierce:pierce, size:sz,
     color: spreadColor || (owner==='player' ? (maxWep ? '#5dffd0' : '#3dffd0') : (tank.isBoss?'#ff3d8a':'#ff5a3c')),
     trail:[], dead:false });
-  if (owner==='player') tank.cd = (24 - tank.weapon*4);
+  if (owner==='player') tank.cd = (18 - tank.weapon*3);
   if (owner!=='player' || true) SFX.shoot();
   tank.recoil = 7;   // 开火后坐力（视觉）
   if (owner==='player') addShake(1.5);   // 开火画面微震
@@ -949,7 +949,7 @@ function spawnFireworks(){
 }
 // 通关彩带飘落（从屏幕顶部洒下，数量可调）
 function spawnConfetti(n){
-  n = n || 60;
+  n = n || 20;
   var hues2 = ['#2bd6ff','#ff36c8','#7dffb0','#ffe14d','#ff9a6b','#b9a3ff'];
   for (var i=0;i<n;i++){
     confetti.push({ x:rand(0,W), y:rand(-H*0.6,-10), vx:rand(-0.6,0.6), vy:rand(1.2,2.6),
@@ -1279,7 +1279,7 @@ function startLevel(idx){
   for (var i=0;i<init;i++) spawnEnemy();
   // BOSS
   if (G_level.boss){ spawnBoss(); }
-  G_countdown = 150;
+  G_countdown = 60;
   G_state = 'ready';
   updateHud();
 }
@@ -1411,7 +1411,7 @@ function roundRect(x,y,w,h,r){
 }
 function buildAmbient(){
   var arr=[];
-  for (var i=0;i<18;i++){
+  for (var i=0;i<8;i++){
     arr.push({
       bx: rand(0,W), by: rand(0,H),
       r: rand(0.6,2.3),
@@ -1426,7 +1426,7 @@ function buildAmbient(){
 // 视差星空（借鉴 GitHub neon 模板 Star 类：横向漂移 + 辉光闪烁）
 function buildStars(){
   stars = [];
-  for (var i=0;i<48;i++){
+  for (var i=0;i<20;i++){
     stars.push({
       x: rand(0,W), y: rand(0,H),
       size: rand(0.5,1.9),
@@ -2123,7 +2123,7 @@ function draw(){
   // 冻结飘雪（全屏雪花缓缓落下，与冻结主题呼应）
   if (G_freeze>0){
     ctx.save();
-    for (var sn=0; sn<42; sn++){
+    for (var sn=0; sn<18; sn++){
       var sx = ((sn*97 + frame*0.5) % (W+20)) - 10;
       var sy = ((sn*61 + frame*1.1) % (H+20)) - 10;
       ctx.globalAlpha = 0.35 + 0.3*Math.sin(frame*0.1 + sn);
@@ -2677,7 +2677,7 @@ overlay.addEventListener('mouseleave', function(){
   function fit(){ c.width = window.innerWidth; c.height = window.innerHeight; }
   fit();
   window.addEventListener('resize', fit);
-  var N = 26, pts = [];
+  var N = 14, pts = [];
   for (var i=0;i<N;i++) pts.push({
     x: Math.random()*c.width, y: Math.random()*c.height,
     vx: (Math.random()-0.5)*0.55, vy: (Math.random()-0.5)*0.55
