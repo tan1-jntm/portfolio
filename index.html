@@ -607,7 +607,7 @@
   .gp-err a{padding:10px 22px;border-radius:999px;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#06121a;text-decoration:none;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:6px;margin:4px 0}
   .gp-err .err-links{display:flex;flex-direction:column;gap:10px;margin-top:8px}
   /* 微信内置浏览器 fallback：iframe 不支持，改用大按钮跳转 */
-  .gp-wxfallback{display:none;flex-direction:column;gap:18px;padding:40px 24px;text-align:center;background:var(--bg);border-radius:0 0 18px 18px}
+  .gp-wxfallback{display:none;flex-direction:column;gap:18px;padding:48px 24px;text-align:center;background:var(--bg);border-radius:0 0 18px 18px;border:1px solid var(--border);border-top:none;min-height:320px;justify-content:center}
   .gp-wxfallback.show{display:flex}
   .gp-wxfallback .wxf-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
   .gp-wxfallback .wxf-sub{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6}
@@ -1015,14 +1015,14 @@
         <iframe id="g1" data-src="./星际战机/index.html" title="星际战机" allowfullscreen loading="eager"></iframe>
         <iframe id="g2" data-src="./坦克大战/index.html" title="奶龙大作战" allowfullscreen loading="eager" class="hide"></iframe>
         <div class="gp-err" id="gpErr" style="display:none"><div class="ico">⚠</div><div>游戏加载失败</div><div class="meta">可能被网络或浏览器限制，请直接打开下方链接</div><div class="err-links"><a href="./星际战机/index.html" target="_blank" rel="noopener">🚀 在新窗口打开星际战机</a><a href="./坦克大战/index.html" target="_blank" rel="noopener">🐲 在新窗口打开奶龙大作战</a></div></div>
-        <!-- 微信内置浏览器 fallback（iframe 不支持时显示） -->
-        <div class="gp-wxfallback" id="gpWxFallback">
-          <div class="wxf-title">📱 检测到微信内置浏览器</div>
-          <div class="wxf-sub">微信不支持内嵌游戏框架<br>点击下方按钮在外部浏览器中打开游戏</div>
-          <a class="wxf-btn" href="./星际战机/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🚀</span> 星际战机</a>
-          <a class="wxf-btn" href="./坦克大战/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🐲</span> 奶龙大作战</a>
-          <div class="wxf-note">提示：点击后选择「在浏览器中打开」即可游玩</div>
-        </div>
+      </div>
+      <!-- 微信内置浏览器 fallback（放在 gp-frame 外面，避免被一起隐藏） -->
+      <div class="gp-wxfallback" id="gpWxFallback">
+        <div class="wxf-title">📱 检测到微信内置浏览器</div>
+        <div class="wxf-sub">微信不支持内嵌游戏框架<br>点击下方按钮在外部浏览器中打开游戏</div>
+        <a class="wxf-btn" href="./星际战机/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🚀</span> 星际战机</a>
+        <a class="wxf-btn" href="./坦克大战/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🐲</span> 奶龙大作战</a>
+        <div class="wxf-note">提示：点击后选择「在浏览器中打开」即可游玩</div>
       </div>
       <div class="gp-hint">↑ 点按钮切换游戏 · 进游戏后点画布激活 · 玩完按 ← → 或回到页面继续浏览</div>
     </div>
@@ -1788,10 +1788,13 @@
       /* 微信内置浏览器检测：iframe 不可用，直接显示跳转按钮 */
       var isWechat=/MicroMessenger/i.test(navigator.userAgent);
       if(isWechat){
-        // 隐藏 iframe 区域、tabs、hint，显示微信 fallback
+        // 隐藏 tabs、iframe 区域内部元素、hint；显示微信 fallback（fallback 在 gp-frame 外面）
         var tabs=gp.querySelector('.gp-tabs'),frame=gp.querySelector('.gp-frame'),hint=gp.querySelector('.gp-hint');
         if(tabs)tabs.style.display='none';
-        if(frame)frame.style.display='none';
+        // 只隐藏 frame 内的 iframe 和 cover，不隐藏整个 frame（fallback 在 frame 外面）
+        if(frame){ var iframes=frame.querySelectorAll('iframe'),cover=frame.querySelector('.gp-cover'),err=frame.querySelector('.gp-err');
+          iframes.forEach(function(f){f.style.display='none';}); if(cover)cover.style.display='none'; if(err)err.style.display='none';
+          frame.style.background='transparent'; frame.style.minHeight='0'; frame.style.height='auto'; }
         if(hint)hint.style.display='none';
         if(wxfb)wxfb.classList.add('show');
         return; /* 不再执行后续 iframe 加载逻辑 */
