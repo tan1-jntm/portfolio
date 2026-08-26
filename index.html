@@ -604,7 +604,18 @@
   .gp-err{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     background:#000;color:#fff;z-index:6;text-align:center;padding:24px;gap:14px}
   .gp-err .ico{width:64px;height:64px;border-radius:50%;background:#7f1d1d;display:flex;align-items:center;justify-content:center;font-size:30px}
-  .gp-err a{padding:10px 22px;border-radius:999px;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#06121a;text-decoration:none;font-weight:800;font-size:13px}
+  .gp-err a{padding:10px 22px;border-radius:999px;background:linear-gradient(135deg,#22d3ee,#a78bfa);color:#06121a;text-decoration:none;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:6px;margin:4px 0}
+  .gp-err .err-links{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  /* 微信内置浏览器 fallback：iframe 不支持，改用大按钮跳转 */
+  .gp-wxfallback{display:none;flex-direction:column;gap:18px;padding:40px 24px;text-align:center;background:var(--bg);border-radius:0 0 18px 18px}
+  .gp-wxfallback.show{display:flex}
+  .gp-wxfallback .wxf-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
+  .gp-wxfallback .wxf-sub{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.6}
+  .gp-wxfallback .wxf-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 24px;border-radius:16px;
+    border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:16px;font-weight:800;text-decoration:none;transition:.2s}
+  .gp-wxfallback .wxf-btn:hover{border-color:var(--accent);box-shadow:0 0 20px rgba(34,211,238,.3)}
+  .gp-wxfallback .wxf-btn .wxf-emoji{font-size:28px}
+  .gp-wxfallback .wxf-note{font-size:12px;color:var(--faint);margin-top:6px}
   .gp-hint{text-align:center;color:var(--faint);font-size:12px;letter-spacing:.04em;padding:11px 12px}
 
   /* ===== 第二十二轮：悬浮目录按钮 ===== */
@@ -1003,7 +1014,15 @@
         <div class="gp-cover" id="gpCover" style="z-index:99999"><div class="ico">▶</div><div class="title">点击进入游戏</div><div class="tip">游戏已加载 · 第一次需要点一下激活音频 / 开始</div><div class="meta">提示：玩完后可滚动页面继续浏览简历</div></div>
         <iframe id="g1" data-src="./星际战机/index.html" title="星际战机" allowfullscreen loading="eager"></iframe>
         <iframe id="g2" data-src="./坦克大战/index.html" title="奶龙大作战" allowfullscreen loading="eager" class="hide"></iframe>
-        <div class="gp-err" id="gpErr" style="display:none"><div class="ico">⚠</div><div>游戏加载失败</div><div class="meta">可能被网络阻拦，请直接打开下方链接</div><a href="./星际战机/index.html" target="_blank" rel="noopener">🚀 在新窗口打开星际战机</a></div>
+        <div class="gp-err" id="gpErr" style="display:none"><div class="ico">⚠</div><div>游戏加载失败</div><div class="meta">可能被网络或浏览器限制，请直接打开下方链接</div><div class="err-links"><a href="./星际战机/index.html" target="_blank" rel="noopener">🚀 在新窗口打开星际战机</a><a href="./坦克大战/index.html" target="_blank" rel="noopener">🐲 在新窗口打开奶龙大作战</a></div></div>
+        <!-- 微信内置浏览器 fallback（iframe 不支持时显示） -->
+        <div class="gp-wxfallback" id="gpWxFallback">
+          <div class="wxf-title">📱 检测到微信内置浏览器</div>
+          <div class="wxf-sub">微信不支持内嵌游戏框架<br>点击下方按钮在外部浏览器中打开游戏</div>
+          <a class="wxf-btn" href="./星际战机/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🚀</span> 星际战机</a>
+          <a class="wxf-btn" href="./坦克大战/index.html" target="_blank" rel="noopener"><span class="wxf-emoji">🐲</span> 奶龙大作战</a>
+          <div class="wxf-note">提示：点击后选择「在浏览器中打开」即可游玩</div>
+        </div>
       </div>
       <div class="gp-hint">↑ 点按钮切换游戏 · 进游戏后点画布激活 · 玩完按 ← → 或回到页面继续浏览</div>
     </div>
@@ -1764,7 +1783,19 @@
       var gp=document.querySelector('.gp');if(!gp)return;
       var f1=document.getElementById('g1'),f2=document.getElementById('g2');
       var load=null,cover=document.getElementById('gpCover'),err=document.getElementById('gpErr');
+      var wxfb=document.getElementById('gpWxFallback');
       var started=false,visible='1',loadedG={1:false,2:false};
+      /* 微信内置浏览器检测：iframe 不可用，直接显示跳转按钮 */
+      var isWechat=/MicroMessenger/i.test(navigator.userAgent);
+      if(isWechat){
+        // 隐藏 iframe 区域、tabs、hint，显示微信 fallback
+        var tabs=gp.querySelector('.gp-tabs'),frame=gp.querySelector('.gp-frame'),hint=gp.querySelector('.gp-hint');
+        if(tabs)tabs.style.display='none';
+        if(frame)frame.style.display='none';
+        if(hint)hint.style.display='none';
+        if(wxfb)wxfb.classList.add('show');
+        return; /* 不再执行后续 iframe 加载逻辑 */
+      }
       function start(){
         if(started)return;started=true;
         if(f1&&!f1.src)f1.src=f1.dataset.src;
@@ -1773,8 +1804,6 @@
       function hideLoad(){/* legacy: cover now handles entry */}
       function showErr(){
         if(err){
-          var u=visible==='1'?'./星际战机/index.html':'./坦克大战/index.html';
-          var link=err.querySelector('a');if(link)link.href=u;
           err.style.display='flex';
         }
         if(cover)cover.classList.add('hide');
