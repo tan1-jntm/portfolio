@@ -1811,25 +1811,18 @@ function draw(){
   ctx.restore();
   for (var i2=0;i2<bullets.length;i2++){
     var bb=bullets[i2];
-    ctx.save();
-    ctx.shadowColor = bb.color; ctx.shadowBlur = 12;
-    ctx.fillStyle = bb.color;
-    if (bb.owner === 'player'){
-      // 友军子弹：圆形（柔和，青色）
-      var br = bb.size/2;
-      ctx.beginPath();
-      ctx.arc(bb.x + br, bb.y + br, br, 0, Math.PI*2);
-      ctx.fill();
-    } else {
-      // 敌方子弹：旋转方块（更具攻击性，红/粉）
+    // 子弹本体：用缓存离屏光点替代 shadowBlur（大幅提升帧率）
+    drawGlow(bb.x + bb.size/2, bb.y + bb.size/2, bb.size*1.6, bb.color, 0.95);
+    if (bb.owner !== 'player'){
+      // 敌方子弹：中心旋转方块（更具攻击性，红/粉）
       ctx.save(); ctx.translate(bb.x+bb.size/2, bb.y+bb.size/2); ctx.rotate(frame*0.3);
-      ctx.fillRect(-bb.size/2, -bb.size/2, bb.size, bb.size);
-      ctx.restore();
+      ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 0.9;
+      ctx.fillRect(-bb.size/3, -bb.size/3, bb.size*0.66, bb.size*0.66);
+      ctx.restore(); ctx.globalAlpha = 1;
     }
     // 子弹白色核心（高能感）
     ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.arc(bb.x + bb.size/2, bb.y + bb.size/2, Math.max(1.2, bb.size/5), 0, Math.PI*2); ctx.fill();
-    ctx.restore();
   }
 
   // 敌人
@@ -2418,7 +2411,7 @@ function drawTank(t, color, isBoss){
   var drawColor = t.displayColor || color;
   ctx.save();
   if (t.flash>0){ drawColor = '#ffffff'; }
-  ctx.shadowColor = drawColor; ctx.shadowBlur = isBoss ? 18 : (t.isPlayer ? (8 + Math.min(10, G_combo)) : 8);   // 玩家辉光随连击增强
+  ctx.shadowColor = drawColor; ctx.shadowBlur = isBoss ? 14 : (t.isPlayer ? (6 + Math.min(6, G_combo)) : 6);
   // 敌人走路浮动（轻微上下颠簸，动态感；不影响碰撞坐标）
   if (!t.isPlayer && !t.isBoss){
     ctx.translate(0, Math.sin(frame*0.12 + t.x*0.05)*1.2);
