@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>守护奶龙 · 霓虹版</title>
+<title>奶龙大作战 · 霓虹版</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;
       -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
@@ -457,7 +457,7 @@
 
   <div id="loading">
     <div class="l-logo"><img src="../certs/nailong_mascot.jpg" alt="奶龙" style="width:62px;height:62px;border-radius:50%;object-fit:cover"></div>
-    <div class="l-title">守护奶龙</div>
+    <div class="l-title">奶龙大作战</div>
     <div class="l-bar"><div class="l-fill" id="lFill"></div></div>
     <div class="l-pct" id="lPct">0%</div>
     <div class="l-tip">NEON TANK WAR · 加载中…</div>
@@ -486,7 +486,7 @@
     <!-- 主菜单 -->
     <section class="screen" data-screen="menu">
       <div class="game-logo"><img src="../certs/nailong_mascot.jpg" alt="奶龙" style="width:80px;height:80px;border-radius:50%;object-fit:cover;display:block"></div>
-      <h1 class="game-title">守护奶龙</h1>
+      <h1 class="game-title">奶龙大作战</h1>
       <div class="game-sub">N E O N · T A N K · W A R</div>
       <div class="menu-btns">
         <button class="gbtn primary" data-act="start">▶ 开始游戏</button>
@@ -915,11 +915,11 @@ function spawnBullet(owner, tank, dir, spreadColor){
 }
 
 function spawnParticles(x, y, color, n, big){
-  if (particles.length > 220) return;   // 粒子上限，防堆特效时卡顿
+  if (particles.length > 100) return;   // 粒子上限，优化帧率
   for (var i=0;i<n;i++){
-    var a = rand(0, Math.PI*2), s = rand(0.5, big?6:3.5);
+    var a = rand(0, Math.PI*2), s = rand(0.5, big?4:2.5);
     particles.push({ x:x, y:y, vx:Math.cos(a)*s, vy:Math.sin(a)*s,
-      life:randInt(18, big?46:34), max:big?46:34, color:color, size:randInt(2, big?6:4) });
+      life:randInt(12, big?28:22), max:big?28:22, color:color, size:randInt(2, big?5:3) });
   }
 }
 function addPopup(x, y, text, color){
@@ -927,7 +927,7 @@ function addPopup(x, y, text, color){
 }
 // 坦克移动地面辉光残影
 function pushTrail(t, color){
-  trails.push({ x:t.x+t.size/2, y:t.y+t.size/2, color:color, life:16, max:16 });
+  trails.push({ x:t.x+t.size/2, y:t.y+t.size/2, color:color, life:10, max:10 });
 }
 // 玻璃 Toast（连击 / 拾取提示）
 function toast(msg, color){
@@ -1047,27 +1047,27 @@ function updateBullets(dt){
     if (b.x<0 || b.y<0 || b.x>W || b.y>H){
       dead = true;
       // 撞到战场边缘溅射火花
-      spawnParticles(clamp(b.x,0,W), clamp(b.y,0,H), b.color, 4);
+      spawnParticles(clamp(b.x,0,W), clamp(b.y,0,H), b.color, 2);
     }
     if (!dead){
       var cc = Math.floor((b.x + b.size/2)/CELL), cr = Math.floor((b.y + b.size/2)/CELL);
       if (cc>=0 && cr>=0 && cc<COLS && cr<ROWS){
         var t = map[cr][cc];
         if (t===T_BRICK){ map[cr][cc] = T_EMPTY; dead = (b.pierce<=0);
-          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#ff9a4a', 6);
-          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#ffe9b0', 4);
+          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#ff9a4a', 3);
+          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#ffe9b0', 2);
           // 碎砖飞溅（橙色砖块碎片）
-          for (var bck=0; bck<3; bck++){
+          for (var bck=0; bck<2; bck++){
             var bca = rand(0,Math.PI*2), bcs = rand(1.5,4.5);
             shards.push({ x:cc*CELL+CELL/2, y:cr*CELL+CELL/2, vx:Math.cos(bca)*bcs, vy:Math.sin(bca)*bcs,
               rot:rand(0,Math.PI*2), vr:rand(-0.5,0.5), size:rand(3,6),
-              life:randInt(18,34), max:34, color:bck%2?'#ff9a4a':'#ffc07a' });
+              life:randInt(14,24), max:24, color:bck%2?'#ff9a4a':'#ffc07a' });
           }
           if (Math.random()<0.05) dropPowerup(cc, cr);
         }
         else if (t===T_STEEL){ dead = (b.pierce<=1);       // 穿透弹打钢墙会消耗
-          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#9ad0ff', 8);
-          flashes.push({ x:cc*CELL+CELL/2, y:cr*CELL+CELL/2, r:3, life:10, max:10, color:'#bfe6ff' });
+          spawnParticles(cc*CELL+CELL/2, cr*CELL+CELL/2, '#9ad0ff', 4);
+          flashes.push({ x:cc*CELL+CELL/2, y:cr*CELL+CELL/2, r:3, life:8, max:8, color:'#bfe6ff' });
         }
         else if (t===T_BASE){
           if (b.owner === 'player'){
@@ -1109,9 +1109,9 @@ function updateBullets(dt){
               if (enemies[j].isBoss && !enemies[j].enraged && enemies[j].hp <= 7) triggerBossEnrage(enemies[j]);
               if (enemies[j].hp <= 0){ killEnemy(j, b); }
               else {
-                spawnParticles(b.x, b.y, enemies[j].isBoss?'#ff5a7a':'#fff', 4);
+                spawnParticles(b.x, b.y, enemies[j].isBoss?'#ff5a7a':'#fff', 2);
                 // 命中十字星芒
-                flashes.push({ x:b.x+b.size/2, y:b.y+b.size/2, r:4, life:12, max:12, color:'#ffffff', cross:true });
+                flashes.push({ x:b.x+b.size/2, y:b.y+b.size/2, r:3, life:8, max:8, color:'#ffffff', cross:true });
               }
               if (b.pierce > 0) b.pierce--; else dead = true;
               break;
@@ -1130,15 +1130,15 @@ function updateBullets(dt){
 function killEnemy(idx, bullet){
   var e = enemies[idx];
   var big = e.isBoss;
-  spawnParticles(e.x + e.size/2, e.y + e.size/2, big?'#ff7aa0':'#ffd34d', big?40:14, big);
-  shockwaves.push({ x:e.x+e.size/2, y:e.y+e.size/2, r: big?12:6, life: big?34:22, max: big?34:22,
+  spawnParticles(e.x + e.size/2, e.y + e.size/2, big?'#ff7aa0':'#ffd34d', big?20:7, big);
+  shockwaves.push({ x:e.x+e.size/2, y:e.y+e.size/2, r: big?8:4, life: big?20:14, max: big?20:14,
     color: big?'#ff7aa0':'#ffd34d' });
   // 击杀高光圆盘：爆点白光冲击（借鉴 neon 模板 Particle 的辉光）
-  flashes.push({ x:e.x+e.size/2, y:e.y+e.size/2, r: big?5:2.5, life: big?24:15, max: big?24:15,
+  flashes.push({ x:e.x+e.size/2, y:e.y+e.size/2, r: big?3:1.5, life: big?16:10, max: big?16:10,
     color: big?'#ffd0e6':'#fff3c0' });
-  if (big){ SFX.boss(); addShake(16); }
+  if (big){ SFX.boss(); addShake(8); }
   else SFX.boom();
-  if (big) addShake(10);
+  if (big) addShake(5);
   var sc = e.isBoss ? BOSS.score : ENEMY_TYPES[e.typeKey].score;
   // 连击
   G_combo++; G_comboTimer = 150;
@@ -1166,7 +1166,7 @@ function killEnemy(idx, bullet){
   }
   if (G_combo>1 && G_combo%3===0){
     SFX.combo(G_combo);
-    if (player) spawnParticles(player.x+player.size/2, player.y+player.size/2, '#7dffb0', 12);
+    if (player) spawnParticles(player.x+player.size/2, player.y+player.size/2, '#7dffb0', 6);
     comboRings.push({ x: player?player.x+player.size/2:e.x+e.size/2, y: player?player.y+player.size/2:e.y+e.size/2, life:36, max:36, combo:G_combo });
     toast('COMBO x'+G_combo+'!', '#7dffb0');
   }
@@ -1199,11 +1199,11 @@ function applyPowerup(p){
   SFX.power();
   addScore(50);
   addPopup(p.x+CELL/2, p.y, PU_INFO[p.type].name, PU_INFO[p.type].color);
-  spawnParticles(p.x+CELL/2, p.y+CELL/2, PU_INFO[p.type].color, 14, true);
+  spawnParticles(p.x+CELL/2, p.y+CELL/2, PU_INFO[p.type].color, 6, true);
   toast(PU_INFO[p.type].name, PU_INFO[p.type].color);
-  spawnConfetti(18);   // 吃道具小彩带
+  spawnConfetti(8);   // 吃道具小彩带
   // 全屏柔光闪（拾取瞬间整屏轻染道具色）
-  flashes.push({ x:W/2, y:H/2, r:W*0.75, life:22, max:22, color:PU_INFO[p.type].color, alphaMul:0.22 });
+  flashes.push({ x:W/2, y:H/2, r:W*0.75, life:14, max:14, color:PU_INFO[p.type].color, alphaMul:0.12 });
   switch(p.type){
     case 'LIFE':   G_lives++; break;
     case 'FIRE':   player.weapon = Math.min(3, player.weapon + 1);
@@ -1296,9 +1296,9 @@ function spawnBoss(){
   portals.push({ x:b.x+b.size/2, y:b.y+b.size/2, life:40, max:40, color:'#ff1744' });
   // 地面裂开登场：尘土 + 深色地裂碎片 + 冲击环
   var bx = b.x+b.size/2, by = b.y+b.size/2;
-  spawnParticles(bx, by, '#8a7a6a', 22, true);
-  spawnParticles(bx, by, '#5a4a3a', 12, true);
-  for (var crk=0; crk<12; crk++){
+  spawnParticles(bx, by, '#8a7a6a', 10, true);
+  spawnParticles(bx, by, '#5a4a3a', 5, true);
+  for (var crk=0; crk<6; crk++){
     var ca = rand(0,Math.PI*2), cs = rand(2,7);
     shards.push({ x:bx, y:by, vx:Math.cos(ca)*cs, vy:Math.sin(ca)*cs-1.5,
       rot:rand(0,Math.PI*2), vr:rand(-0.4,0.4), size:rand(4,9),
@@ -1351,18 +1351,18 @@ function weightedType(weights){
 function playerHit(){
   G_lives--;
   G_combo = 0;
-  addShake(8);
-  G_redFlash = 14;
+  addShake(4);
+  G_redFlash = 10;
   // 受击碎裂：白色玻璃碎片飞散 + 红色火花（打击感）
   var hx = player ? player.x+player.size/2 : PLAYER_SPAWN.c*CELL+CELL/2;
   var hy = player ? player.y+player.size/2 : PLAYER_SPAWN.r*CELL+CELL/2;
-  for (var fg=0; fg<8; fg++){
-    var fa = rand(0,Math.PI*2), fs = rand(2,6);
+  for (var fg=0; fg<4; fg++){
+    var fa = rand(0,Math.PI*2), fs = rand(2,5);
     shards.push({ x:hx, y:hy, vx:Math.cos(fa)*fs, vy:Math.sin(fa)*fs-1,
-      rot:rand(0,Math.PI*2), vr:rand(-0.4,0.4), size:rand(3,7),
-      life:randInt(20,40), max:40, color:'#ffffff' });
+      rot:rand(0,Math.PI*2), vr:rand(-0.4,0.4), size:rand(3,6),
+      life:randInt(14,26), max:26, color:'#ffffff' });
   }
-  spawnParticles(hx, hy, '#ff5a7a', 18, true);
+  spawnParticles(hx, hy, '#ff5a7a', 8, true);
   if (G_lives <= 0){ loseGame('你的坦克被击毁！'); return; }
   player = makeTank(PLAYER_SPAWN.c, PLAYER_SPAWN.r, 0, true, 'NORMAL');
   player.inv = 120;
