@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>邓智瑶 · 储能科学与工程 · 个人简历</title>
-<meta name="description" content="储能科学与工程大一新生邓智瑶的个人简历：21 项 AI 厂商认证、校园实践、考研规划（目标江苏大学能动）。">
+<meta name="description" content="储能科学与工程大一新生邓智瑶的个人简历：21 项 AI 厂商认证、个人经历、考研规划（目标江苏大学能动）。">
 <meta property="og:title" content="邓智瑶 · 储能科学与工程 · 个人简历">
 <meta property="og:description" content="储能科学与工程大一新生：21 项 AI 厂商认证、两个游戏作品、考研规划（目标江苏大学能动）。">
 <meta property="og:type" content="profile">
@@ -217,6 +217,11 @@
   .tl ul li:before{content:">";position:absolute;left:2px;top:2px;color:var(--accent);font-weight:700}
   .tl-link{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:var(--accent);border:1px solid var(--accent);padding:6px 14px;border-radius:999px;transition:.2s}
   .tl-link:hover{background:var(--accent);color:var(--bg)}
+  /* 经历卡片里的可点击缩略图（点开放大全屏展示） */
+  .tl-shot{position:relative;display:block;width:100%;max-width:360px;margin:0 0 14px;border-radius:12px;overflow:hidden;cursor:zoom-in;border:1px solid var(--border2);background:#0a0f1c;transition:transform .25s,box-shadow .25s,border-color .25s}
+  .tl-shot:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 1px var(--accent)}
+  .tl-shot img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .tl-shot-cap{position:absolute;left:10px;bottom:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);letter-spacing:.02em}
 
   /* cert grid */
   .cert-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -306,6 +311,15 @@
   .lb-card .ltag{color:var(--muted);font-size:.78rem;letter-spacing:.04em;opacity:.92}
   .lb-close{position:absolute;top:-14px;right:-14px;width:38px;height:38px;border-radius:50%;border:none;background:#fff;color:#0f172a;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:.25s}
   .lb-close:hover{transform:rotate(90deg)}
+  /* ===== 单图全屏模式（个人经历里的游戏截图等，给别人展示用） ===== */
+  .lb.img-mode{padding:0;background:#000}
+  .lb.img-mode .lb-back{background:#000;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .lb.img-mode .lb-dlg{max-width:none;width:100vw;height:100vh;height:100dvh;transform:none;opacity:1;margin:0}
+  .lb.img-mode .cert-view{max-width:none;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000}
+  .lb.img-mode .cv-img{width:100%;height:100%;max-width:100vw;max-height:100vh;max-height:100dvh;object-fit:contain;border-radius:0;background:#000;box-shadow:none}
+  .lb.img-mode .lb-close{top:16px;right:16px;width:44px;height:44px;z-index:60;font-size:1.5rem;background:rgba(10,14,24,.72);color:#fff;border:1px solid rgba(255,255,255,.35);box-shadow:0 4px 18px rgba(0,0,0,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:50%}
+  .lb.img-mode .lb-title-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 20px 18px;text-align:center;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.72));font-size:13px;z-index:5;pointer-events:none;display:block}
+  .lb.img-mode .cv-title{max-width:96vw;text-shadow:0 2px 12px rgba(0,0,0,.9)}
 
   /* reveal (JS only -> hidden until in view; safe fallback below) */
   html.js .reveal{opacity:0;transform:translateY(32px);filter:blur(10px);transition:opacity .7s ease,transform .7s ease,filter .7s ease}
@@ -962,8 +976,7 @@
     <div class="stat reveal"><div class="num" data-count="21">0</div><div class="lbl">行业认证</div></div>
     <div class="stat reveal"><div class="num" data-count="7">0</div><div class="lbl">认证方向</div></div>
     <div class="stat reveal"><div class="num" data-count="2">0</div><div class="lbl">游戏作品</div></div>
-    <div class="stat reveal"><div class="num" data-count="2">0</div><div class="lbl">校园实践</div></div>
-    <div class="stat reveal"><div class="num" data-count="20">0</div><div class="lbl">雅思课时</div></div>
+    <div class="stat reveal"><div class="num" data-count="2">0</div><div class="lbl">个人经历</div></div>
     <div class="stat reveal"><div class="num" data-count="1">0</div><div class="lbl">专业首届学生</div></div>
   </div>
 </div>
@@ -1043,7 +1056,6 @@
 
 <!-- NOW -->
 <div class="now reveal stagger">
-  <div class="now-item"><span class="now-dot"></span><div><b>雅思备考</b><em>早 10–12 / 下午 2–4，10 天 20 场进行中</em></div></div>
   <div class="now-item"><span class="now-dot"></span><div><b>AI 应用训练营</b><em>网站 / PPT / 简历 / 短剧作业，进行中</em></div></div>
   <div class="now-item"><span class="now-dot done"></span><div><b>储能专业前置学习</b><em>产业链调研 + 21 项认证，已完成</em></div></div>
 </div>
@@ -1070,7 +1082,7 @@
     <div class="tags reveal stagger">
       <span class="eyebrow">Focus · 我正在做的</span>
       <div class="chips">
-        <span class="chip">储能专业</span><span class="chip">AI 应用</span><span class="chip">校园销售</span><span class="chip">游戏开发</span><span class="chip">雅思备考</span><span class="chip">内容创作</span>
+        <span class="chip">储能专业</span><span class="chip">AI 应用</span><span class="chip">校园销售</span><span class="chip">游戏开发</span><span class="chip">内容创作</span>
       </div>
     </div>
   </div>
@@ -1297,7 +1309,7 @@
       tabs:[
         {id:'storage',label:'储能专业前置学习'},
         {id:'ai',label:'AI 技能自主积累'},
-        {id:'practice',label:'校园实践'},
+        {id:'practice',label:'个人经历'},
         {id:'projects',label:'项目作品'}
       ],
       panels:{
@@ -1312,11 +1324,10 @@
           '通过人工智能训练师（初级 / 高级）认证，了解智能客服标注与训练流程',
           '全程自主检索官方文档与课程资源，沉淀「官方文档 + 实战上手」学习方法']}],
         practice:[
-          {date:'2026',title:'庆余货贱 · 校园零食铺',desc:'校园创业实践',points:[
-            '参与校园零食铺的运营与推广，面向同学进行宣传拉新',
-            '协助选品与库存整理，了解基础的商品周转逻辑',
-            '在服务同学的过程中锻炼沟通与需求响应能力',
-            '跑通「选品 → 推广 → 成交 → 复购」完整小生意闭环']},
+          {date:'2020 – 至今',title:'王者荣耀 · 个人玩家',desc:'ID「小雨泠鹞」· 巅峰万强 · 全能 / 辅助',img:'wzry-profile.jpg',points:[
+            '巅峰赛历史最高 2172 分 · 巅峰万强（辅助 & 全能）',
+            '本命元流之子战力 13800 · 9 颗王者印记 + 9 颗荣耀印记',
+            '12100+ 场对局、6700+ 次被赞、134 款英雄皮肤 · 86 级大师收藏家']},
           {date:'2026',title:'星辰科技 · 电脑售卖',desc:'校园销售实践',points:[
             '面向同学提供电脑选购咨询与售卖服务',
             '根据实际需求（学习 / 游戏 / 性价比）匹配机型与配置',
@@ -1395,10 +1406,20 @@
         var tl=document.createElement('div');tl.className='timeline';
         items.forEach(function(it){
           var d=document.createElement('div');d.className='tl';
-          var html='<div class="date">'+it.date+'</div><div class="title">'+it.title+'</div><div class="tdesc">'+it.desc+'</div><ul>';
+          var html='';
+          if(it.img){
+            html+='<div class="tl-shot" role="button" tabindex="0" aria-label="点击放大 '+it.title+'">'
+              +'<img src="'+it.img+'" alt="'+it.title+'" loading="lazy" decoding="async">'
+              +'<span class="tl-shot-cap">点击放大全屏展示</span></div>';
+          }
+          html+='<div class="date">'+it.date+'</div><div class="title">'+it.title+'</div><div class="tdesc">'+it.desc+'</div><ul>';
           it.points.forEach(function(pt){html+='<li>'+pt+'</li>';});
           html+='</ul>';
           d.innerHTML=html;
+          if(it.img){
+            var shot=d.querySelector('.tl-shot');
+            (function(src,ti,de){function go(){openImg(src,ti,de);} shot.addEventListener('click',go); shot.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});})(it.img,it.title,it.desc);
+          }
           if(it.link){var a=document.createElement('a');a.className='tl-link';a.href=it.link;a.target='_blank';a.rel='noopener';a.textContent=it.linkText||'查看';d.appendChild(a);}
           tl.appendChild(d);
         });
@@ -1471,6 +1492,23 @@
     /* ---------- lightbox ---------- */
     var lb=$('#lb');
     var lbTab=null,lbIdx=0;
+    /* 单图全屏查看（个人经历里的游戏截图等），复用 #lb 但走 img-mode 全屏样式 */
+    function openImg(src,title,desc){
+      lbTab=null; lbIdx=0;
+      var im=$('#lbImg'),cv=$('#certView');
+      im.onload=function(){cv.classList.remove('no-img');im.style.display='block';};
+      im.onerror=function(){cv.classList.add('no-img');im.style.display='none';};
+      im.src=src;im.style.display='block';cv.classList.remove('no-img');
+      /* 证书专属元素全部隐藏，标题/描述走 lbTitle/lbCap */
+      ['#lbCard','#lbCap','#lbDl','#lbPrev','#lbNext','#lbCount'].forEach(function(s){var el=$(s);if(el)el.style.display='none';});
+      var h=lb.querySelector('.lb-hint');if(h)h.style.display='none';
+      $('#lbLogo').textContent='';
+      $('#lbTitle').textContent=title||'';
+      $('#lbTag').textContent='';
+      $('#lbOrg').textContent=desc||'';
+      lb.classList.add('img-mode');
+      lb.classList.add('open');document.body.style.overflow='hidden';
+    }
     function openLb(tab,idx){
       lbTab=tab;lbIdx=idx;
       renderLb();
@@ -1505,7 +1543,12 @@
     function stepLb(d){if(!lbTab)return;var n=CERT.panels[lbTab.id].length;lbIdx=(lbIdx+d+n)%n;renderLb();}
     $('#lbPrev').addEventListener('click',function(){stepLb(-1);});
     $('#lbNext').addEventListener('click',function(){stepLb(1);});
-    function closeLb(){lb.classList.remove('open');document.body.style.overflow='';}
+    function closeLb(){lb.classList.remove('open');lb.classList.remove('img-mode');document.body.style.overflow='';
+      /* 清除 openImg 临时设置的 inline display，恢复 CSS 默认值（下次 openLb 走 renderLb 重置需要切换的） */
+      ['#lbCard','#lbCap','#lbDl','#lbPrev','#lbNext','#lbCount'].forEach(function(s){var el=$(s);if(el)el.style.display='';});
+      var h=lb.querySelector('.lb-hint');if(h)h.style.display='';
+      $('#lbOrg').textContent='';
+    }
     $('#lbClose').addEventListener('click',closeLb);
     $$('[data-close]',lb).forEach(function(el){el.addEventListener('click',closeLb);});
     document.addEventListener('keydown',function(e){
@@ -1631,9 +1674,9 @@
       var fillB=light?'rgba(167,139,250,.72)':'rgba(167,139,250,.32)';
       var strokeC=light?'#0e7490':'rgba(34,211,238,.95)';
       var dotC=light?'#0e7490':'#22d3ee';
-      var cx=size/2,cy=size/2,R=size*.31,n=6,max=10;
-      var labels=['储能专业','AI 应用','编程开发','校园销售','英语雅思','设计创作'];
-      var vals=[7,8,7,7,5,6],t0=null;
+      var cx=size/2,cy=size/2,R=size*.31,n=5,max=10;
+      var labels=['储能专业','AI 应用','编程开发','校园销售','设计创作'];
+      var vals=[7,8,7,7,6],t0=null;
       function pt(i,r){var a=-Math.PI/2+i*2*Math.PI/n;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
       function frame(ts){
         if(!t0)t0=ts;var p=Math.min((ts-t0)/1100,1);
@@ -1793,17 +1836,37 @@
       var wxfb=document.getElementById('gpWxFallback');
       var started=false,visible='1',loadedG={1:false,2:false};
       /* 微信内置浏览器检测：iframe 不可用，直接显示跳转按钮 */
-      var isWechat=/MicroMessenger/i.test(navigator.userAgent);
-      if(isWechat){
-        // 隐藏 tabs、iframe 区域内部元素、hint；显示微信 fallback（fallback 在 gp-frame 外面）
+      /* iframe 检测：手机/平板或微信内置浏览器 → 直接走"新窗口打开"fallback。
+         原因：移动端 iframe 渲染 canvas 游戏（坦克大战、星际战机）容易出现画面闪烁/卡顿，
+         单独修游戏内部无法根除。最稳的办法是让移动端用户在新窗口全屏玩。 */
+      var ua = navigator.userAgent;
+      var isWechat = /MicroMessenger/i.test(ua);
+      var isMobileUA = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(ua);
+      var isTouchNarrow = ('ontouchstart' in window) && Math.min(window.innerWidth, window.innerHeight) <= 820;
+      var isMobile = isMobileUA || isTouchNarrow;
+      if (isWechat || isMobile){
+        // 隐藏 tabs、iframe 区域内部元素、hint；显示 fallback（fallback 在 gp-frame 外面）
         var tabs=gp.querySelector('.gp-tabs'),frame=gp.querySelector('.gp-frame'),hint=gp.querySelector('.gp-hint');
         if(tabs)tabs.style.display='none';
-        // 只隐藏 frame 内的 iframe 和 cover，不隐藏整个 frame（fallback 在 frame 外面）
         if(frame){ var iframes=frame.querySelectorAll('iframe'),cover=frame.querySelector('.gp-cover'),err=frame.querySelector('.gp-err');
           iframes.forEach(function(f){f.style.display='none';}); if(cover)cover.style.display='none'; if(err)err.style.display='none';
           frame.style.background='transparent'; frame.style.minHeight='0'; frame.style.height='auto'; }
         if(hint)hint.style.display='none';
-        if(wxfb)wxfb.classList.add('show');
+        if(wxfb){
+          // 针对不同场景改文案
+          var tEl=wxfb.querySelector('.wxf-title'), sEl=wxfb.querySelector('.wxf-sub'), nEl=wxfb.querySelector('.wxf-note');
+          if (isWechat && !isMobile){
+            // 保持原微信文案
+          } else if (isMobile && !isWechat){
+            if(tEl)tEl.textContent='📱 移动端推荐在浏览器新窗口打开';
+            if(sEl)sEl.innerHTML='手机内嵌 canvas 容易出现画面闪烁<br>点击下方按钮在新窗口全屏玩，体验更稳';
+            if(nEl)nEl.textContent='提示：浏览器打开后建议把页面「添加到主屏幕」全屏游玩';
+          } else {
+            if(tEl)tEl.textContent='📱 检测到微信 / 移动端';
+            if(sEl)sEl.innerHTML='当前环境内嵌游戏不稳定<br>点击下方按钮在浏览器中打开游戏';
+          }
+          wxfb.classList.add('show');
+        }
         return; /* 不再执行后续 iframe 加载逻辑 */
       }
       function start(){
