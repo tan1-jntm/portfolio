@@ -477,10 +477,16 @@
     border:1px solid var(--border2);font-size:12px;color:var(--muted)}
 
   /* ===== 第十三轮：现状条 / 涟漪 / 提示 / 注脚 ===== */
-  .now{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .now{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
   .now-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);
     border-radius:16px;padding:18px 20px;transition:.22s}
   .now-item:hover{border-color:var(--border2);transform:translateY(-3px)}
+  .now-item{position:relative}
+  .now-item::before{content://;position:absolute;top:0;left:14px;right:14px;height:2.5px;
+    border-radius:0 0 6px 6px;background:linear-gradient(90deg,rgba(34,211,238,.9),rgba(167,139,250,.8),rgba(45,212,191,.9));
+    background-size:200% 100%;animation:borderflow 5s linear infinite}
+  .now-item em{color:var(--muted)}
+  @keyframes borderflow{to{background-position:200% 0}}
   .now-dot{width:10px;height:10px;border-radius:50%;background:var(--teal);margin-top:6px;flex-shrink:0;
     box-shadow:0 0 0 0 rgba(45,212,191,.6);animation:pulse 2s infinite}
   .now-dot.done{background:var(--faint);animation:none;box-shadow:none}
