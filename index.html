@@ -977,7 +977,7 @@
     <div class="stat reveal"><div class="num" data-count="7">0</div><div class="lbl">认证方向</div></div>
     <div class="stat reveal"><div class="num" data-count="2">0</div><div class="lbl">游戏作品</div></div>
     <div class="stat reveal"><div class="num" data-count="2">0</div><div class="lbl">个人经历</div></div>
-    <div class="stat reveal"><div class="num" data-count="1">0</div><div class="lbl">专业首届学生</div></div>
+    
   </div>
 </div>
 
@@ -2378,5 +2378,30 @@
   });
 })();
 </script>
+
+<!-- v2.3 动效美化 -->
+<style>
+@media (prefers-reduced-motion: no-preference) {
+  .chat-section .reveal { border-left: 2px solid var(--border); padding-left: 16px;
+    transition: border-color .35s ease, padding-left .35s ease; }
+  .chat-section .reveal:hover { border-left-color: var(--accent); padding-left: 22px; }
+  .chat-section .reveal h3 { transition: color .3s ease; }
+  .chat-section .reveal:hover h3 { color: var(--accent); }
+  .chat-section .reveal p:last-of-type { transition: transform .35s ease; }
+  .chat-section .reveal:hover p:last-of-type { transform: translateX(4px); }
+  .pgrid .pcard:hover { box-shadow: 0 18px 50px rgba(0, 0, 0, .35); }
+  .chat-section figure { transition: box-shadow .4s ease; }
+  .chat-section figure:hover { box-shadow: 0 20px 60px rgba(0, 0, 0, .4); }
+  #certificates img { transition: transform .4s ease, box-shadow .4s ease; }
+  #certificates img:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 14px 40px rgba(34, 211, 238, .25); }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .tab-btn { transition: border-color .25s ease, color .25s ease, background .25s ease; }
+  .hero-photo img { animation: avatarGlow 4.5s ease-in-out infinite; }
+  @keyframes avatarGlow {
+    0%, 100% { filter: drop-shadow(0 0 0 rgba(34, 211, 238, 0)); }
+    50% { filter: drop-shadow(0 6px 22px rgba(34, 211, 238, .35)); }
+  }
+}
+</style>
 </body>
 </html>
