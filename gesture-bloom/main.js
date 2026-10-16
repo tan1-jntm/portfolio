@@ -308,13 +308,30 @@ async function boot() {
     pointer: { x: 0, y: 0 }, handPoint: { x: 0.5, y: 0.5 },
     elapsed: 0, demoStarted: 0, lastBloom: 1, graphicsAvailable: true, landmarksVisible: false,
   };
-  function showNotice(message) { $('noticeText').textContent = message; $('notice').hidden = false; }
+  function showNotice(message) {
+    $('noticeText').textContent = message; $('notice').hidden = false;
+    $('noticeCopy').hidden = true;
+  }
   function setStatus(text, kind = '') {
     if ($('statusText').textContent !== text) $('statusText').textContent = text;
     $('statusDot').className = `status-dot ${kind ? `is-${kind}` : ''}`;
   }
   function setHint(text) { if ($('interactionHint').textContent !== text) $('interactionHint').textContent = text; }
   $('noticeClose').addEventListener('click', () => { $('notice').hidden = true; });
+  $('noticeCopy').addEventListener('click', async () => {
+    const button = $('noticeCopy');
+    try {
+      await navigator.clipboard.writeText(location.href);
+      button.textContent = '已复制，去浏览器粘贴打开';
+    } catch {
+      const helper = document.createElement('input');
+      helper.value = location.href; document.body.append(helper);
+      helper.select();
+      try { document.execCommand('copy'); button.textContent = '已复制，去浏览器粘贴打开'; }
+      catch { button.textContent = location.href; }
+      helper.remove();
+    }
+  });
 
   // 固定版本本地优先；若使用者删除 vendor，可显式联网降级到 CDN。
   let THREE;
@@ -601,7 +618,7 @@ async function boot() {
       NotAllowedError: '摄像头权限未开启。请在地址栏允许此页面使用摄像头，然后重试。你也可以继续体验演示。',
       NotFoundError: '没有找到摄像头。连接摄像头后重试，或直接体验演示。',
       NotReadableError: '摄像头被其他应用占用或无法读取。关闭占用摄像头的应用后重试。',
-      OverconstrainedError: '所选摄像头已经断开或不支持当前参数。请在右下角重新选择摄像头。',
+      OverconstrainedError: '所选摄像头已断开或参数不受支持。请在右下角重新选择摄像头后重试。',
       SecurityError: '浏览器禁止摄像头访问。请在 localhost 或 HTTPS 页面中打开。',
     };
     return messages[error.name] || `手部识别启动失败：${error.message || '请检查识别模型是否完整、网络及浏览器支持'}`;
@@ -629,7 +646,10 @@ async function boot() {
     state.cameraDevices = devices;
     const stillPresent = devices.some((device) => device.deviceId === state.selectedDeviceId);
     if (!stillPresent || !state.explicitCameraSelection) {
-      state.selectedDeviceId = selectDesktopCamera(devices)?.deviceId || '';
+      // 授权前名称为空时 selectDesktopCamera 选不中，回退到第一个带 ID 的设备；
+      // 真正的手机/虚拟摄像头过滤在拿到视频轨道后按真实名称核对。
+      state.selectedDeviceId = selectDesktopCamera(devices)?.deviceId
+        || devices.find((device) => device.deviceId)?.deviceId || '';
       state.explicitCameraSelection = false;
     }
     const placeholder = new Option(devices.some((device) => device.label)
@@ -664,6 +684,11 @@ async function boot() {
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
       showNotice('摄像头需要安全环境。本机预览请用 http://localhost:5500，分享给其他电脑时请使用 HTTPS 网站。'); return;
     }
+    if (/MicroMessenger/i.test(navigator.userAgent)) {
+      showNotice('微信内置浏览器不允许网页调用摄像头。请点右上角「⋯」→「在浏览器中打开」，用手机自带的 Safari 或 Chrome 打开本页后再开启摄像头。也可以复制下面的链接，粘贴到浏览器打开。');
+      $('noticeCopy').hidden = false;
+      return;
+    }
     state.cameraWanted = true;
     const session = ++state.cameraSession;
     state.cameraPhase = 'starting';
@@ -672,24 +697,35 @@ async function boot() {
     try {
       await refreshCameraDevices();
       if (session !== state.cameraSession) return;
-      const chosen = state.cameraDevices.find((device) => device.deviceId === state.selectedDeviceId);
-      if (!chosen) {
+      if (!state.cameraDevices.length) {
         stopCamera();
-        showNotice(state.cameraDevices.some((device) => device.label)
-          ? '没有自动选中电脑摄像头。请连接内置或 USB 摄像头，并在右下角选择；手机和虚拟摄像头不会自动开启。'
-          : state.cameraDevices.some((device) => device.deviceId)
-            ? '授权前浏览器隐藏了设备名称。请在右下角主动选择电脑摄像头，再点击开启并允许访问。打开后会核对真实来源。'
-            : '浏览器尚未提供可选择的摄像头。请打开地址栏的站点设置，允许摄像头访问，再点击右下角“刷新”，选择电脑摄像头后开启。页面不会自动打开默认的手机来源。');
+        showNotice('浏览器未报告任何摄像头设备。请连接摄像头后重试，或直接体验演示。');
         return;
       }
-      const requestedDeviceId = chosen.deviceId;
+      // 授权前部分浏览器（手机 Chrome/Safari）会把 deviceId 置空，此时 find 会命中第一台设备，
+      // 不加 deviceId 约束直接请求默认摄像头，拿到轨道后再核对真实来源。
+      const chosen = state.cameraDevices.find((device) => device.deviceId === state.selectedDeviceId);
+      if (state.selectedDeviceId && !chosen) {
+        stopCamera();
+        showNotice('之前选择的摄像头已断开。请在右下角重新选择摄像头，再点击开启。');
+        return;
+      }
+      const requestedDeviceId = chosen?.deviceId || '';
       const knowinglyChosenOtherSource = state.explicitCameraSelection
-        && ['phone', 'virtual'].includes(cameraDeviceKind(chosen.label));
+        && ['phone', 'virtual'].includes(cameraDeviceKind(chosen?.label));
       // 页面不在加载时索取权限；只有用户主动按按钮才进入这里。
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: {
-        deviceId: { exact: requestedDeviceId },
-        width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30, max: 30 },
-      } });
+      const videoConstraints = { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30, max: 30 } };
+      if (requestedDeviceId) videoConstraints.deviceId = { exact: requestedDeviceId };
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: videoConstraints });
+      } catch (error) {
+        // 设备 ID 在授权前后可能变化导致精确约束失败，去掉约束重试一次。
+        if (requestedDeviceId && error.name === 'OverconstrainedError') {
+          delete videoConstraints.deviceId;
+          stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: videoConstraints });
+        } else { throw error; }
+      }
       if (session !== state.cameraSession) { stopTracks(stream); return; }
       const actualTrack = stream.getVideoTracks()[0];
       const actualDeviceId = actualTrack?.getSettings().deviceId;
