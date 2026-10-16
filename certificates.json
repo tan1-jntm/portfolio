@@ -1,0 +1,107 @@
+[
+  {
+    "name": "大模型 Clouder 认证：RAG 应用构建及优化",
+    "tag": "RAG",
+    "image": "certs/aliyun_rag_optimize.jpg"
+  },
+  {
+    "name": "大模型 Clouder 认证：Spring AI 应用开发（入门）",
+    "tag": "Spring AI",
+    "image": "certs/10_spring_ai.jpg"
+  },
+  {
+    "name": "大模型 Clouder 认证：基于百炼平台构建智能体应用",
+    "tag": "智能体",
+    "image": "certs/aliyun_agent_bailian.jpg"
+  },
+  {
+    "name": "大模型 Clouder 认证：基于通义灵码实现高效 AI 编码实践",
+    "tag": "AI 编码",
+    "image": "certs/11_tongyi_lingma.jpg"
+  },
+  {
+    "name": "大模型 Clouder 认证：利用大模型提升内容生产能力",
+    "tag": "内容生产",
+    "image": "certs/aliyun_content_production.jpg"
+  },
+  {
+    "name": "人工智能 Clouder 认证：VISION 人工智能设计（入门）",
+    "tag": "AI 设计",
+    "image": "certs/aliyun_vision_basic.jpg"
+  },
+  {
+    "name": "人工智能 Clouder 认证：VISION 人工智能设计（进阶）",
+    "tag": "AI 设计",
+    "image": "certs/aliyun_vision_advanced.jpg"
+  },
+  {
+    "name": "基于 PAI ArtLab 的 AIGC 设计基础",
+    "tag": "AIGC",
+    "image": "certs/aliyun_aigc_artlab.jpg"
+  },
+  {
+    "name": "人工智能训练师（初级）—— 达摩院智能客服",
+    "tag": "训练师",
+    "image": "certs/damo_trainer_junior.jpg"
+  },
+  {
+    "name": "人工智能训练师（高级）—— 达摩院智能客服",
+    "tag": "训练师",
+    "image": "certs/damo_trainer_senior.jpg"
+  },
+  {
+    "name": "RAG 工程师认证",
+    "tag": "RAG",
+    "image": "certs/iflytek_rag.jpg"
+  },
+  {
+    "name": "微调工程师认证",
+    "tag": "微调",
+    "image": "certs/iflytek_finetune.jpg"
+  },
+  {
+    "name": "智能体工程师认证",
+    "tag": "智能体",
+    "image": "certs/iflytek_agent.jpg"
+  },
+  {
+    "name": "Prompt 工程师认证",
+    "tag": "Prompt",
+    "image": "certs/iflytek_prompt.jpg"
+  },
+  {
+    "name": "人工智能初识微认证",
+    "tag": "AI 基础",
+    "image": "certs/huawei_ai_intro.jpg"
+  },
+  {
+    "name": "人工智能技能认证（AI 智能语音识别计算器）",
+    "tag": "AI 语音",
+    "image": "certs/huawei_ai_voice.png"
+  },
+  {
+    "name": "大模型开发工程师（浪潮信息 + Datawhale）",
+    "tag": "LLM",
+    "image": "certs/datawhal_llm_developer.png"
+  },
+  {
+    "name": "Prompt Engineer（讯飞星火 + Datawhale）",
+    "tag": "Prompt",
+    "image": "certs/datawhal_prompt_engineer.png"
+  },
+  {
+    "name": "AI+编程能力认证",
+    "tag": "AI 编程",
+    "image": "certs/datawhale_ai_coding.jpg"
+  },
+  {
+    "name": "LLM Certification · Fine-tuning Engineer（Datawhale × 科大讯飞 × 讯飞星辰）",
+    "tag": "微调工程师",
+    "image": "certs/inline-certificate-0.jpeg"
+  },
+  {
+    "name": "Large Language Model Certificate · LLM Engineer（Datawhale × 超动云 VirtAI Cloud × HAAI）",
+    "tag": "LLM工程师",
+    "image": "certs/inline-certificate-1.jpeg"
+  }
+]
