@@ -1,0 +1,8 @@
+{
+  "name": "gesture-bloom",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Three.js 与 MediaPipe Hands 驱动的指尖粒子花朵，纯静态网页。",
+  "scripts": { "check": "node --check main.js" }
+}
