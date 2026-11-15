@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#eff2f8">
-  <title>AI+信息素养大赛 · 决赛极速对抗模拟</title>
-  <meta name="description" content="AI+信息素养大赛决赛模拟，含个人接力、团队抢答和 AI 专项。打开即练，也能下载 HTML 离线使用。">
+  <title>极速对抗 · 队内训练</title>
+  <meta name="description" content="队内备赛用的 AI+信息素养决赛模拟。房主开房后把一条邀请链接发给两位队友，也可自己练习或下载 HTML。">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://tan1-jntm.github.io/portfolio/speed-final/">
   <style>
 :root {
@@ -227,6 +228,11 @@ dialog::backdrop { background: #142621a8; }
 .recovery-hint { margin-top: 8px; }
 .online-practice .actions { margin-top: 12px; }
 .online-practice a, .room-entry[href] { display: inline-flex; align-items: center; text-decoration: none; }
+.team-guide { margin-top: 18px; padding: 14px 16px; background: var(--white); border: 1px solid var(--line); border-radius: 9px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; justify-content: space-between; }
+.team-guide > div { flex: 1 1 400px; }
+.team-guide h2 { font-size: 19px; margin-bottom: 4px; }
+.team-guide p { font-size: 14px; color: var(--muted); }
+.team-guide a { white-space: nowrap; }
 .seat-warning { margin-top: 5px; color: var(--danger); font-size: 13px; }
 .room-status { padding: 8px 12px; background: var(--blue-soft); color: var(--blue-dark); margin-top: 10px; border-radius: 5px; }
 .room-badge { min-width: max-content; color: var(--blue-dark); font-size: 14px; font-weight: 700; }
@@ -304,7 +310,7 @@ dialog::backdrop { background: #142621a8; }
       <button type="button" class="top-button" data-action="rules"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6m-6 4h6m-6 4h4"/></svg> 比赛规则</button>
     </div>
   </header>
-  <main id="app"><section class="config"><h1>AI+信息素养大赛 · 决赛极速对抗模拟</h1><p>AI+信息素养大赛决赛模拟，含个人接力、团队抢答和 AI 专项。打开即练，也能下载 HTML 离线使用。</p><p>完整模拟共 40 题，满分 100 分。支持单练任意一轮。</p></section></main>
+  <main id="app"><section class="config"><h1>极速对抗 · 队内训练</h1><p>队内备赛用的 AI+信息素养决赛模拟。房主开房后把一条邀请链接发给两位队友，也可自己练习或下载 HTML。</p><p>完整模拟共 40 题，满分 100 分。支持单练任意一轮。</p></section></main>
   <footer class="footer"><span>决赛极速对抗模拟器</span><a href="./index.html" download="speed-final-practice.html">下载离线 HTML</a></footer>
   <dialog id="rules-dialog" aria-labelledby="rules-title">
     <div class="dialog-top"><h2 id="rules-title">比赛规则</h2><form method="dialog"><button class="button secondary" aria-label="关闭比赛规则">关闭</button></form></div>
@@ -772,24 +778,26 @@ dialog::backdrop { background: #142621a8; }
   }
 
   function renderLobby() {
+    const sharing = document.body.hasAttribute('data-public-practice');
     const hasBuzzer = settings.mode === 'full' || settings.mode === 'buzzer';
     const roundList = Object.entries(rounds).map(([id, round]) => `<section class="round-rule">
       <div class="round-line"><span class="round-icon">${icon(id)}</span>
       <h3>${round.name}</h3><p class="stat">${round.minutes} 分钟 · ${round.total} 题 · 满分 ${engine.constants.maximums[id]}</p></div>
       ${ruleSteps(round)}${ruleExample(round)}</section>`).join('');
     app.innerHTML = `<section class="hero" aria-labelledby="title">
-      <div class="hero-main"><h1 id="title">极速对抗</h1><p>个人接力 <span aria-hidden="true">→</span> 团队抢答 <span aria-hidden="true">→</span> AI 专项</p>
+      <div class="hero-main"><h1 id="title">极速对抗</h1><p>${sharing ? '队内训练 · 单机练习' : '个人接力 <span aria-hidden="true">→</span> 团队抢答 <span aria-hidden="true">→</span> AI 专项'}</p>
       <a class="jump-settings" href="#open-settings">去开赛设置 <span aria-hidden="true">↓</span></a></div>
       <div class="hero-index" aria-label="完整决赛规格"><div><strong>38</strong><span>分钟</span></div><div><strong>40</strong><span>道题</span></div><div><strong>100</strong><span>满分</span></div></div>
     </section>
+    ${sharing ? `<section class="team-guide" aria-label="队内训练入口"><div><h2>三台电脑一起练</h2><p>房主用专用入口开房，把同一条邀请链接发给另外两位队友。队友点「加入比赛」自动入座，三人到齐后由房主开赛。</p></div><a class="button secondary room-entry" href="https://speed-final-practice.topjellyfish4.chatgpt.site/">有房间码？加入队伍</a></section>` : ''}
     <div class="lobby">
       <section class="schedule" aria-labelledby="lobby-rules-title"><h2 id="lobby-rules-title">比赛规则</h2>${roundList}</section>
       <section class="config" id="open-settings" aria-labelledby="settings-title"><h2 id="settings-title">开赛设置</h2>
         ${selectInput('训练范围', 'mode', [['full', '完整决赛'], ...Object.entries(rounds).map(([id, round]) => [id, round.name])])}
         ${hasBuzzer ? `<div class="settings-row">${selectInput('抢答对手', 'opponents', [[7, '7 支模拟队'], [15, '15 支模拟队']])}${selectInput('抢答强度', 'difficulty', Object.entries(difficulties))}</div>` : ''}
-        <button type="button" class="button primary launch" data-action="launch"><span>${settings.mode === 'full' ? '进入模拟赛' : `进入${rounds[settings.mode].name}`}</span><span aria-hidden="true">→</span></button>
+        <button type="button" class="button primary launch" data-action="launch"><span>${settings.mode === 'full' ? sharing ? '开始单机练习' : '进入模拟赛' : `进入${rounds[settings.mode].name}`}</span><span aria-hidden="true">→</span></button>
         <p class="tiny subtle">${bank.length} 道内置题 · 每场重新抽题 · 单设备轮换作答</p>
-        ${document.body.hasAttribute('data-public-practice') ? '<a class="quiet room-entry" href="https://speed-final-practice.topjellyfish4.chatgpt.site/">打开公网联机页 <span aria-hidden="true">→</span></a>' : '<button type="button" class="quiet room-entry" data-action="lan-help">三台电脑联机练接力 <span aria-hidden="true">→</span></button>'}
+        ${sharing ? '' : '<button type="button" class="quiet room-entry" data-action="lan-help">三台电脑联机练接力 <span aria-hidden="true">→</span></button>'}
         ${previous ? '<button type="button" class="quiet previous" data-action="previous">查看上场成绩</button>' : ''}
         ${error ? `<p class="error" role="alert">${esc(error)}</p>` : ''}
         ${ruleScoring()}
