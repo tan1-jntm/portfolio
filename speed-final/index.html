@@ -7,6 +7,7 @@
   <title>极速对抗 · 队内训练</title>
   <meta name="description" content="队内备赛用的 AI+信息素养决赛模拟。网页可以单机练习，还能下载 Windows 启动包，在同一个 Wi-Fi 上三人联机。">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
   <link rel="canonical" href="https://tan1-jntm.github.io/portfolio/speed-final/">
   <style>
 :root {
@@ -226,11 +227,19 @@ dialog::backdrop { background: #142621a8; }
 .recover-panel { max-width: 600px; margin-inline: auto; }
 .recover-panel summary { cursor: pointer; color: var(--blue-dark); font-weight: 730; min-height: 34px; }
 .recovery-hint { margin-top: 8px; }
+.displayed-room-code { margin-top: 14px; margin-bottom: 6px; }
+.displayed-room-code input { font: 750 clamp(17px, 4vw, 25px)/1 var(--mono); letter-spacing: .025em; color: var(--blue-dark); }
 .online-practice .actions { margin-top: 12px; }
 .online-practice a, .room-entry[href] { display: inline-flex; align-items: center; text-decoration: none; }
 .team-guide { margin-top: 18px; padding: 14px 16px; background: var(--white); border: 1px solid var(--line); border-radius: 9px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; justify-content: space-between; }
 .team-guide > div:first-child { flex: 1 1 380px; }
 .team-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.team-host-help { color: var(--muted); }
+.team-host-help summary { min-height: 46px; align-content: center; color: var(--blue-dark); font-weight: 700; cursor: pointer; }
+.team-host-help a { display: inline-block; min-height: 34px; }
+.join-by-code { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
+.join-by-code input { flex: 1 1 160px; max-width: 220px; min-width: 0; min-height: 46px; padding: 8px 10px; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; background: var(--paper); font: 600 16px/1.2 var(--mono); text-transform: uppercase; }
+.team-guide .join-lan-error { color: var(--danger); margin-top: 6px; }
 .team-guide h2 { font-size: 19px; margin-bottom: 4px; }
 .team-guide p { font-size: 14px; color: var(--muted); }
 .team-guide a { white-space: nowrap; }
@@ -324,7 +333,7 @@ dialog::backdrop { background: #142621a8; }
   </dialog>
   <dialog id="lan-help" aria-labelledby="lan-help-title">
     <div class="dialog-top"><h2 id="lan-help-title">同一 Wi-Fi 联机</h2><form method="dialog"><button class="button secondary">关闭</button></form></div>
-    <ol class="lan-steps"><li>三台电脑连同一个 Wi-Fi 或手机热点。</li><li>只有房主需要双击 <strong>「启动三机联机.cmd」</strong>。等它打开网页，点「创建队内训练房」，启动窗口留着。</li><li>房主把页面复制的同一条邀请链接发给两位队友。两位队友用普通浏览器加入，三人都在线后由房主开赛。</li></ol>
+    <ol class="lan-steps"><li>三台电脑连同一个 Wi-Fi 或手机热点。</li><li>房主双击 <strong>「启动三机联机.cmd」</strong>，点「创建队内训练房」，启动窗口留着。</li><li>把「同网房间号」发给两位队友。他们在 GitHub 训练页填写号码即可入座。也可以直接发邀请链接。</li></ol>
     <p class="subtle tiny">只需房主电脑有 Node.js 22 或更新版本。这个方式走局域网，无需代理。如果同一个校园 Wi-Fi 的电脑互相连不上，可以换同一个手机热点再试。</p>
   </dialog>
   <dialog id="seat-recovery" aria-labelledby="seat-recovery-title">
@@ -667,6 +676,75 @@ dialog::backdrop { background: #142621a8; }
 
   </script>
   <script>
+(function (root) {
+  'use strict';
+
+  const alphabet = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const port = '8765';
+  const classB = 2 ** 24;
+  const classC = classB + 2 ** 20;
+  const roomMask = (1n << 30n) - 1n;
+
+  function packAddress(address) {
+    const octets = address.split('.').map(Number);
+    if (octets.length !== 4 || octets.some(value => value < 0 || value > 255 || !Number.isInteger(value))) return null;
+    const [first, second, third, fourth] = octets;
+    if (first === 10) return second * 65536 + third * 256 + fourth;
+    if (first === 172 && second >= 16 && second <= 31) return classB + (second - 16) * 65536 + third * 256 + fourth;
+    if (first === 192 && second === 168) return classC + third * 256 + fourth;
+    return null;
+  }
+
+  function unpackAddress(value) {
+    if (value >= classC + 65536) return null;
+    if (value >= classC) return `192.168.${Math.floor((value - classC) / 256)}.${value % 256}`;
+    const high = value >= classB ? `172.${16 + Math.floor((value - classB) / 65536)}` : `10.${Math.floor(value / 65536)}`;
+    return `${high}.${Math.floor(value / 256) % 256}.${value % 256}`;
+  }
+
+  function packDigits(digits) {
+    return Array.from(digits).reduce((number, char) => (number << 5n) + BigInt(alphabet.indexOf(char)), 0n);
+  }
+
+  function digits(number, count) {
+    const characters = Array(count);
+    for (let index = count - 1; index >= 0; index -= 1) {
+      characters[index] = alphabet[Number(number & 31n)];
+      number >>= 5n;
+    }
+    return characters.join('');
+  }
+
+  function check(value) {
+    const sum = Array.from(value).reduce((total, char, index) => total + (2 * index + 1) * alphabet.indexOf(char), 11);
+    return alphabet[sum % 32];
+  }
+
+  function encode(address) {
+    let url;
+    try { url = new URL(address); } catch { return null; }
+    const room = url.searchParams.get('room');
+    const ip = packAddress(url.hostname);
+    if (url.protocol !== 'http:' || url.port !== port || ip === null || !/^[2-9A-HJ-NP-Z]{6}$/.test(room || '')) return null;
+    const payload = digits((BigInt(ip) << 30n) | packDigits(room), 11);
+    return (payload + check(payload)).match(/.{4}/g).join('-');
+  }
+
+  function decode(code) {
+    const normalized = code.normalize('NFKC').toUpperCase().replace(/[\s-]/g, '');
+    if (!/^[2-9A-HJ-NP-Z]{12}$/.test(normalized)) return null;
+    const payload = normalized.slice(0, 11);
+    if (check(payload) !== normalized[11]) return null;
+    const packed = packDigits(payload);
+    const ip = unpackAddress(Number(packed >> 30n));
+    return ip ? `http://${ip}:${port}/?room=${digits(packed & roomMask, 6)}` : null;
+  }
+
+  root.FinalsLanRoomCode = Object.freeze({ encode, decode });
+})(globalThis);
+
+  </script>
+  <script>
 
   </script>
   <script>
@@ -791,7 +869,9 @@ dialog::backdrop { background: #142621a8; }
       <a class="jump-settings" href="#open-settings">去开赛设置 <span aria-hidden="true">↓</span></a></div>
       <div class="hero-index" aria-label="完整决赛规格"><div><strong>38</strong><span>分钟</span></div><div><strong>40</strong><span>道题</span></div><div><strong>100</strong><span>满分</span></div></div>
     </section>
-    <section class="team-guide" aria-label="队内训练入口"><div><h2>三台电脑一起练</h2><p>${hasHostKit ? '同一 Wi-Fi 或手机热点下，只需房主下载并解压 Windows 启动包。队友打开房间邀请链接即可入座。' : '同一 Wi-Fi 或手机热点下，房主在自己电脑启动联机，再把一条局域网邀请发给两位队友。三人都不用代理。'}</p></div><div class="team-actions">${hasHostKit ? '<a class="button primary" href="./lan-kit.zip" download>下载联机启动包</a>' : ''}<button type="button" class="button secondary" data-action="lan-help">看免代理接力步骤</button></div></section>
+    <section class="team-guide" aria-label="队内训练入口"><div><h2>三台电脑一起练</h2>${hasHostKit
+      ? '<p>连同一个 Wi-Fi 或手机热点，填房主发来的同网房间号。</p><form id="join-lan-by-code" class="join-by-code"><label class="sr-only" for="lan-room-code">同网房间号</label><input id="lan-room-code" name="room" placeholder="XXXX-XXXX-XXXX" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required><button class="button primary" type="submit">加入房间</button></form><p id="join-lan-error" class="join-lan-error" role="alert" hidden></p>'
+      : '<p>同一 Wi-Fi 或手机热点下，房主在自己电脑启动联机，再把房间号或邀请链接发给两位队友。三人都不用代理。</p>'}</div><div class="team-actions">${hasHostKit ? '<details class="team-host-help"><summary>我是房主</summary><p>装过启动器，直接双击「启动三机联机.cmd」。</p><a href="./lan-kit.zip" download>首次下载 Windows 启动包</a></details>' : ''}<button type="button" class="button secondary" data-action="lan-help">看联机步骤</button></div></section>
     <div class="lobby">
       <section class="schedule" aria-labelledby="lobby-rules-title"><h2 id="lobby-rules-title">比赛规则</h2>${roundList}</section>
       <section class="config" id="open-settings" aria-labelledby="settings-title"><h2 id="settings-title">开赛设置</h2>
@@ -1077,6 +1157,18 @@ dialog::backdrop { background: #142621a8; }
       render();
       app.querySelector('[name="mode"]')?.focus();
     }
+  });
+
+  document.addEventListener('submit', event => {
+    if (event.target.id !== 'join-lan-by-code') return;
+    event.preventDefault();
+    const input = event.target.elements.room;
+    const target = globalThis.FinalsLanRoomCode.decode(input.value);
+    if (target) { location.assign(`${target}#join`); return; }
+    const error = document.querySelector('#join-lan-error');
+    error.textContent = '请复制房主页面上的 12 位「同网房间号」。';
+    error.hidden = false;
+    input.focus();
   });
 
   document.addEventListener('click', event => {
