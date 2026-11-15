@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#eff2f8">
   <title>极速对抗 · 队内训练</title>
-  <meta name="description" content="队内备赛用的 AI+信息素养决赛模拟。房主开房后把一条邀请链接发给两位队友，也可自己练习或下载 HTML。">
+  <meta name="description" content="队内备赛用的 AI+信息素养决赛模拟。网页可以单机练习，还能下载 Windows 启动包，在同一个 Wi-Fi 上三人联机。">
   <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://tan1-jntm.github.io/portfolio/speed-final/">
   <style>
@@ -229,7 +229,8 @@ dialog::backdrop { background: #142621a8; }
 .online-practice .actions { margin-top: 12px; }
 .online-practice a, .room-entry[href] { display: inline-flex; align-items: center; text-decoration: none; }
 .team-guide { margin-top: 18px; padding: 14px 16px; background: var(--white); border: 1px solid var(--line); border-radius: 9px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; justify-content: space-between; }
-.team-guide > div { flex: 1 1 400px; }
+.team-guide > div:first-child { flex: 1 1 380px; }
+.team-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .team-guide h2 { font-size: 19px; margin-bottom: 4px; }
 .team-guide p { font-size: 14px; color: var(--muted); }
 .team-guide a { white-space: nowrap; }
@@ -300,7 +301,7 @@ dialog::backdrop { background: #142621a8; }
 
   </style>
 </head>
-<body data-public-practice>
+<body data-public-practice data-host-kit>
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -310,7 +311,7 @@ dialog::backdrop { background: #142621a8; }
       <button type="button" class="top-button" data-action="rules"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6m-6 4h6m-6 4h4"/></svg> 比赛规则</button>
     </div>
   </header>
-  <main id="app"><section class="config"><h1>极速对抗 · 队内训练</h1><p>队内备赛用的 AI+信息素养决赛模拟。房主开房后把一条邀请链接发给两位队友，也可自己练习或下载 HTML。</p><p>完整模拟共 40 题，满分 100 分。支持单练任意一轮。</p></section></main>
+  <main id="app"><section class="config"><h1>极速对抗 · 队内训练</h1><p>队内备赛用的 AI+信息素养决赛模拟。网页可以单机练习，还能下载 Windows 启动包，在同一个 Wi-Fi 上三人联机。</p><p>完整模拟共 40 题，满分 100 分。支持单练任意一轮。</p></section></main>
   <footer class="footer"><span>决赛极速对抗模拟器</span><a href="./index.html" download="speed-final-practice.html">下载离线 HTML</a></footer>
   <dialog id="rules-dialog" aria-labelledby="rules-title">
     <div class="dialog-top"><h2 id="rules-title">比赛规则</h2><form method="dialog"><button class="button secondary" aria-label="关闭比赛规则">关闭</button></form></div>
@@ -322,9 +323,9 @@ dialog::backdrop { background: #142621a8; }
     <div class="actions"><form method="dialog"><button class="button secondary">继续答题</button></form><button class="button primary" data-action="confirm-exit">结束本场</button></div>
   </dialog>
   <dialog id="lan-help" aria-labelledby="lan-help-title">
-    <div class="dialog-top"><h2 id="lan-help-title">三台电脑联机</h2><form method="dialog"><button class="button secondary">关闭</button></form></div>
-    <ol class="lan-steps"><li>三台电脑连接同一个网络。</li><li>主控电脑双击本网页旁的「启动三机联机.cmd」，保持窗口开启。</li><li>主控电脑打开联机页并建房。其他两台电脑打开邀请链接，分别加入 2 号座、3 号座。</li></ol>
-    <div class="actions"><a class="button primary" href="http://localhost:8765/" target="_blank" rel="noopener">打开主控电脑联机页</a></div>
+    <div class="dialog-top"><h2 id="lan-help-title">同一 Wi-Fi 联机</h2><form method="dialog"><button class="button secondary">关闭</button></form></div>
+    <ol class="lan-steps"><li>三台电脑连同一个 Wi-Fi 或手机热点。</li><li>只有房主需要双击 <strong>「启动三机联机.cmd」</strong>。等它打开网页，点「创建队内训练房」，启动窗口留着。</li><li>房主把页面复制的同一条邀请链接发给两位队友。两位队友用普通浏览器加入，三人都在线后由房主开赛。</li></ol>
+    <p class="subtle tiny">只需房主电脑有 Node.js 22 或更新版本。这个方式走局域网，无需代理。如果同一个校园 Wi-Fi 的电脑互相连不上，可以换同一个手机热点再试。</p>
   </dialog>
   <dialog id="seat-recovery" aria-labelledby="seat-recovery-title">
     <div class="dialog-top"><h2 id="seat-recovery-title">本座位的恢复码</h2><form method="dialog"><button class="button secondary">关闭</button></form></div>
@@ -779,6 +780,7 @@ dialog::backdrop { background: #142621a8; }
 
   function renderLobby() {
     const sharing = document.body.hasAttribute('data-public-practice');
+    const hasHostKit = document.body.hasAttribute('data-host-kit') && location.protocol !== 'file:';
     const hasBuzzer = settings.mode === 'full' || settings.mode === 'buzzer';
     const roundList = Object.entries(rounds).map(([id, round]) => `<section class="round-rule">
       <div class="round-line"><span class="round-icon">${icon(id)}</span>
@@ -789,7 +791,7 @@ dialog::backdrop { background: #142621a8; }
       <a class="jump-settings" href="#open-settings">去开赛设置 <span aria-hidden="true">↓</span></a></div>
       <div class="hero-index" aria-label="完整决赛规格"><div><strong>38</strong><span>分钟</span></div><div><strong>40</strong><span>道题</span></div><div><strong>100</strong><span>满分</span></div></div>
     </section>
-    ${sharing ? `<section class="team-guide" aria-label="队内训练入口"><div><h2>三台电脑一起练</h2><p>房主用专用入口开房，把同一条邀请链接发给另外两位队友。队友点「加入比赛」自动入座，三人到齐后由房主开赛。</p></div><a class="button secondary room-entry" href="https://speed-final-practice.topjellyfish4.chatgpt.site/">有房间码？加入队伍</a></section>` : ''}
+    <section class="team-guide" aria-label="队内训练入口"><div><h2>三台电脑一起练</h2><p>${hasHostKit ? '同一 Wi-Fi 或手机热点下，只需房主下载并解压 Windows 启动包。队友打开房间邀请链接即可入座。' : '同一 Wi-Fi 或手机热点下，房主在自己电脑启动联机，再把一条局域网邀请发给两位队友。三人都不用代理。'}</p></div><div class="team-actions">${hasHostKit ? '<a class="button primary" href="./lan-kit.zip" download>下载联机启动包</a>' : ''}<button type="button" class="button secondary" data-action="lan-help">看免代理接力步骤</button></div></section>
     <div class="lobby">
       <section class="schedule" aria-labelledby="lobby-rules-title"><h2 id="lobby-rules-title">比赛规则</h2>${roundList}</section>
       <section class="config" id="open-settings" aria-labelledby="settings-title"><h2 id="settings-title">开赛设置</h2>
@@ -797,7 +799,6 @@ dialog::backdrop { background: #142621a8; }
         ${hasBuzzer ? `<div class="settings-row">${selectInput('抢答对手', 'opponents', [[7, '7 支模拟队'], [15, '15 支模拟队']])}${selectInput('抢答强度', 'difficulty', Object.entries(difficulties))}</div>` : ''}
         <button type="button" class="button primary launch" data-action="launch"><span>${settings.mode === 'full' ? sharing ? '开始单机练习' : '进入模拟赛' : `进入${rounds[settings.mode].name}`}</span><span aria-hidden="true">→</span></button>
         <p class="tiny subtle">${bank.length} 道内置题 · 每场重新抽题 · 单设备轮换作答</p>
-        ${sharing ? '' : '<button type="button" class="quiet room-entry" data-action="lan-help">三台电脑联机练接力 <span aria-hidden="true">→</span></button>'}
         ${previous ? '<button type="button" class="quiet previous" data-action="previous">查看上场成绩</button>' : ''}
         ${error ? `<p class="error" role="alert">${esc(error)}</p>` : ''}
         ${ruleScoring()}
